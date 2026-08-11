@@ -5,17 +5,22 @@ class Hatchward < Formula
   desc "Multi-instance agent-fleet orchestrator"
   homepage "https://hatchward.dev"
 
-  # There is deliberately no `version` line. Homebrew scans one out of the URL,
-  # and `brew audit --strict` fails with "version ... is redundant with version
-  # scanned from URL" if it is also stated here — confirmed against this exact
-  # formula, so do not "fix" this by adding it back.
+  # Stated explicitly, and it has to be. Homebrew otherwise scans a version out
+  # of the /download/<tag>/ path segment — but the tap namespaces its tags as
+  # `hatchward-v1.2.3`, which does not parse as a version, so the scan falls
+  # through to the filename and infers `64` from the trailing arch digits of
+  # `hatchward_v1.2.3_darwin_arm64.tar.gz`. Verified: with the prefixed tag and
+  # no version line, `brew info` reports `stable 64`.
   #
-  # What it scans is the /download/<tag>/ path segment, NOT the filename: the
-  # bare `hatchward_v1.0.0_darwin_arm64.tar.gz` would infer `64` from the
-  # trailing arch digits. So the URLs below must keep the tag in the path. If
-  # they ever move to a host that drops it, restore the version line in the same
-  # change — the golden test in cli.yml will not notice, but every user's
-  # `brew install` will.
+  # This block previously said the opposite — that stating a version fails
+  # `brew audit --strict` as "redundant with version scanned from URL". That is
+  # true only while the scan yields the same answer, which the namespaced tag
+  # ended. Re-verified against this exact formula: `audit --strict` exits 0.
+  #
+  # So the two facts are linked. If the tag prefix is ever dropped, the scan
+  # starts working again, this line becomes redundant, and audit starts failing
+  # — change both together.
+  version "0.3.1"
 
   # The EULA has no SPDX identifier, and :cannot_represent is the documented
   # value for that. A bare string like "Proprietary" is not a valid expression
@@ -40,22 +45,22 @@ class Hatchward < Formula
   # "invalid attribute for formula ... url ()".
   on_macos do
     on_arm do
-      url "https://github.com/influpert/homebrew-tap/releases/download/v0.3.1/hatchward_v0.3.1_darwin_arm64.tar.gz"
+      url "https://github.com/influpert/homebrew-tap/releases/download/hatchward-v0.3.1/hatchward_v0.3.1_darwin_arm64.tar.gz"
       sha256 "347580c91c3314c41921adb7e3895f61871a9d8597d9aee4c1fbb5e86af7437e"
     end
     on_intel do
-      url "https://github.com/influpert/homebrew-tap/releases/download/v0.3.1/hatchward_v0.3.1_darwin_amd64.tar.gz"
+      url "https://github.com/influpert/homebrew-tap/releases/download/hatchward-v0.3.1/hatchward_v0.3.1_darwin_amd64.tar.gz"
       sha256 "a0fd7ef9714361e27d26ba3d0e8802b1c3913a1ecad0faf3104bd9707b8cf8f4"
     end
   end
 
   on_linux do
     on_arm do
-      url "https://github.com/influpert/homebrew-tap/releases/download/v0.3.1/hatchward_v0.3.1_linux_arm64.tar.gz"
+      url "https://github.com/influpert/homebrew-tap/releases/download/hatchward-v0.3.1/hatchward_v0.3.1_linux_arm64.tar.gz"
       sha256 "8ceff5c0e260e71d845c273ed2aae30623f9057f7ed2d1180a20f48dfd8acc1c"
     end
     on_intel do
-      url "https://github.com/influpert/homebrew-tap/releases/download/v0.3.1/hatchward_v0.3.1_linux_amd64.tar.gz"
+      url "https://github.com/influpert/homebrew-tap/releases/download/hatchward-v0.3.1/hatchward_v0.3.1_linux_amd64.tar.gz"
       sha256 "7eb25097ca1603defe453a737bafe17971b695e3d06687721a856f33b8d89ec6"
     end
   end
