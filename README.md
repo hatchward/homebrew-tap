@@ -1,6 +1,6 @@
-# influpert Homebrew Tap
+# Influpert Homebrew Tap
 
-Homebrew formulae for [influpert](https://github.com/influpert)'s tools, on macOS and Linux.
+Homebrew formulae for [Influpert](https://influpert.com)'s tools, on macOS and Linux.
 
 ## Install
 
