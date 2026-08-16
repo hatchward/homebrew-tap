@@ -20,7 +20,7 @@ class Hatchward < Formula
   # So the two facts are linked. If the tag prefix is ever dropped, the scan
   # starts working again, this line becomes redundant, and audit starts failing
   # — change both together.
-  version "0.3.1"
+  version "0.5.0"
 
   # The EULA has no SPDX identifier, and :cannot_represent is the documented
   # value for that. A bare string like "Proprietary" is not a valid expression
@@ -45,23 +45,23 @@ class Hatchward < Formula
   # "invalid attribute for formula ... url ()".
   on_macos do
     on_arm do
-      url "https://github.com/influpert/homebrew-tap/releases/download/hatchward-v0.3.1/hatchward_v0.3.1_darwin_arm64.tar.gz"
-      sha256 "347580c91c3314c41921adb7e3895f61871a9d8597d9aee4c1fbb5e86af7437e"
+      url "https://github.com/influpert/homebrew-tap/releases/download/hatchward-v0.5.0/hatchward_v0.5.0_darwin_arm64.tar.gz"
+      sha256 "4ab8127779bfbe09bc99900d0fdaf7960a8edf8dc262cc180c58932e9b430717"
     end
     on_intel do
-      url "https://github.com/influpert/homebrew-tap/releases/download/hatchward-v0.3.1/hatchward_v0.3.1_darwin_amd64.tar.gz"
-      sha256 "a0fd7ef9714361e27d26ba3d0e8802b1c3913a1ecad0faf3104bd9707b8cf8f4"
+      url "https://github.com/influpert/homebrew-tap/releases/download/hatchward-v0.5.0/hatchward_v0.5.0_darwin_amd64.tar.gz"
+      sha256 "2ae68efaddb306c864a3d7306b351e376d12bd427a34cf5f0fc33ce998db477c"
     end
   end
 
   on_linux do
     on_arm do
-      url "https://github.com/influpert/homebrew-tap/releases/download/hatchward-v0.3.1/hatchward_v0.3.1_linux_arm64.tar.gz"
-      sha256 "8ceff5c0e260e71d845c273ed2aae30623f9057f7ed2d1180a20f48dfd8acc1c"
+      url "https://github.com/influpert/homebrew-tap/releases/download/hatchward-v0.5.0/hatchward_v0.5.0_linux_arm64.tar.gz"
+      sha256 "bd6096d86329bbc92ef2f46dda78bb8783bb9eb36460375c94b80f0668d2d4b6"
     end
     on_intel do
-      url "https://github.com/influpert/homebrew-tap/releases/download/hatchward-v0.3.1/hatchward_v0.3.1_linux_amd64.tar.gz"
-      sha256 "7eb25097ca1603defe453a737bafe17971b695e3d06687721a856f33b8d89ec6"
+      url "https://github.com/influpert/homebrew-tap/releases/download/hatchward-v0.5.0/hatchward_v0.5.0_linux_amd64.tar.gz"
+      sha256 "700772ba9794577170d8247242c746bd7eddff40c6c9ba9e92cef433f499666f"
     end
   end
 
@@ -72,12 +72,32 @@ class Hatchward < Formula
     doc.install "LICENSE"
   end
 
+  # `brew services start hatchward` runs the control plane, for operators who
+  # manage everything else on the box that way.
+  #
+  # opt_bin, not bin. bin resolves into the VERSIONED Cellar directory that the
+  # next `brew upgrade` deletes; opt_bin is the stable symlink Homebrew
+  # repoints, and a service naming the other one dies at the upgrade with its
+  # complaint going somewhere nobody looks. `hatchward controlplane install`
+  # keeps the same path unresolved for exactly this reason.
+  #
+  # This and an init-installed launchd agent are TWO supervisors for one port.
+  # Whichever binds first wins and the other loops on "address already in use";
+  # `hatchward controlplane status` reports what is actually running. Pick one —
+  # docs/controlplane.md says which to pick when.
+  service do
+    run [opt_bin/"hatchward", "controlplane", "serve"]
+    keep_alive true
+    log_path var/"log/hatchward-controlplane.log"
+    error_log_path var/"log/hatchward-controlplane.log"
+  end
+
   # Homebrew re-signs a Mach-O ad-hoc if keg relocation rewrites it. That never
   # fires here — a CGO_ENABLED=0 Go binary carries no Cellar paths to rewrite —
   # but if a Developer ID signature is ever added upstream, check that this
   # still holds before trusting the installed binary to be notarized.
 
   test do
-    assert_match "v0.3.1", shell_output("#{bin}/hatchward --version")
+    assert_match "v0.5.0", shell_output("#{bin}/hatchward --version")
   end
 end
