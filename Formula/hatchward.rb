@@ -20,7 +20,7 @@ class Hatchward < Formula
   # So the two facts are linked. If the tag prefix is ever dropped, the scan
   # starts working again, this line becomes redundant, and audit starts failing
   # — change both together.
-  version "0.11.0"
+  version "0.12.0"
 
   # The EULA has no SPDX identifier, and :cannot_represent is the documented
   # value for that. A bare string like "Proprietary" is not a valid expression
@@ -45,23 +45,23 @@ class Hatchward < Formula
   # "invalid attribute for formula ... url ()".
   on_macos do
     on_arm do
-      url "https://github.com/hatchward/homebrew-tap/releases/download/hatchward-v0.11.0/hatchward_v0.11.0_darwin_arm64.tar.gz"
-      sha256 "0bb734bebbcabd4b324d8944921031638aa51112b3e1d0fc8e5aa39279c467a7"
+      url "https://github.com/hatchward/homebrew-tap/releases/download/hatchward-v0.12.0/hatchward_v0.12.0_darwin_arm64.tar.gz"
+      sha256 "26f2f9c25630e280c294104610bfd3e76a64db6391fcfde5e4113e749b9a7671"
     end
     on_intel do
-      url "https://github.com/hatchward/homebrew-tap/releases/download/hatchward-v0.11.0/hatchward_v0.11.0_darwin_amd64.tar.gz"
-      sha256 "7f9f567c5420599630b7fe9e44228101d7910e71eeb0f6cbfbafeb7c570f43a6"
+      url "https://github.com/hatchward/homebrew-tap/releases/download/hatchward-v0.12.0/hatchward_v0.12.0_darwin_amd64.tar.gz"
+      sha256 "da4a140ce3f4585d3257a6ceebc568430e213db2ca74bf373930fc36a2755913"
     end
   end
 
   on_linux do
     on_arm do
-      url "https://github.com/hatchward/homebrew-tap/releases/download/hatchward-v0.11.0/hatchward_v0.11.0_linux_arm64.tar.gz"
-      sha256 "3d17f9982f0e639b897de2043652b48bd88402b2c4f6d1edbe99291a2c204662"
+      url "https://github.com/hatchward/homebrew-tap/releases/download/hatchward-v0.12.0/hatchward_v0.12.0_linux_arm64.tar.gz"
+      sha256 "20c5133a1b9c2ff945827c13f781e724131318f23fb28aeb41b4cf2c9f4082c9"
     end
     on_intel do
-      url "https://github.com/hatchward/homebrew-tap/releases/download/hatchward-v0.11.0/hatchward_v0.11.0_linux_amd64.tar.gz"
-      sha256 "9497f4dbb483fab397e47076004f33422c59edf3f72dac58fe3a553c4a324520"
+      url "https://github.com/hatchward/homebrew-tap/releases/download/hatchward-v0.12.0/hatchward_v0.12.0_linux_amd64.tar.gz"
+      sha256 "52e65006a886dad4d6163328c7591043ba3d82e57ee6d4ada18341a5b422d2dc"
     end
   end
 
@@ -99,6 +99,6 @@ class Hatchward < Formula
   # still holds before trusting the installed binary to be notarized.
 
   test do
-    assert_match "v0.11.0", shell_output("#{bin}/hatchward --version")
+    assert_match "v0.12.0", shell_output("#{bin}/hatchward --version")
   end
 end
